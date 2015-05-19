@@ -1,14 +1,6 @@
-package intermediate;
-
-public abstract class Stm{
-
-	public Stm() {
-	}
-	
-	public void print(){
-		/*
-		 * Como implementar?
-		 */
-	}
-
+package Tree;
+abstract public class Stm {
+	abstract public ExpList kids();
+	abstract public Stm build(ExpList kids);
 }
+

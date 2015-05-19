@@ -1,46 +1,7 @@
 package intermediate;
 
+import arvore.*;
 import java.util.Stack;
-
-import arvore.BlockFuncao;
-import arvore.ComposicaoDeclaracao;
-import arvore.DeclaracaoAtribuicao;
-import arvore.DeclaracaoEscrita;
-import arvore.DeclaracaoIf;
-import arvore.DeclaracaoIfElse;
-import arvore.DeclaracaoLeitura;
-import arvore.DeclaracaoVariaveis;
-import arvore.DeclaracaoWhile;
-import arvore.ExpDivisao;
-import arvore.ExpE;
-import arvore.ExpId;
-import arvore.ExpMultiplicacao;
-import arvore.ExpNao;
-import arvore.ExpOu;
-import arvore.ExpRelacionais;
-import arvore.ExpSoma;
-import arvore.ExpSubtracao;
-import arvore.Inicio;
-import arvore.ListaDeclaracao;
-import arvore.ListaExpressao;
-import arvore.ListaVariavel;
-import arvore.LiteralFalso;
-import arvore.LiteralInteiro;
-import arvore.LiteralReal;
-import arvore.LiteralString;
-import arvore.LiteralVerdadeiro;
-import arvore.OpDiferente;
-import arvore.OpIgualdade;
-import arvore.OpMaior;
-import arvore.OpMaiorIgual;
-import arvore.OpMenor;
-import arvore.OpMenorIgual;
-import arvore.Tipo;
-import arvore.TipoBoolean;
-import arvore.TipoInt;
-import arvore.TipoReal;
-import arvore.TipoString;
-import arvore.Visitor;
 
 public abstract class IntermediateCodeGen implements Visitor {
 	
@@ -257,6 +218,20 @@ public abstract class IntermediateCodeGen implements Visitor {
 
 	@Override
 	public void visit(DeclaracaoWhile n) {
+
+	}
+	/* ==================================================
+	 * 
+	 * (non-Javadoc)
+	 * @see intermediate.Visitor#visit(intermediate.Binop)
+	 */
+	@Override
+	public void visit(Binop binop) {
+
+	}
+	
+	@Override
+	public void visit(Const ct) {
 
 	}
 	

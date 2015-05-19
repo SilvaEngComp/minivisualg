@@ -34,20 +34,14 @@ public class Binop extends Exp {
 			return "e";
 		case sym.OU:
 			return "ou";
-		case sym.IGUAL:
+		case sym.XOU:
 			return "=";
-		case sym.DIFERENTE:
-			return "<>";
-		case sym.MAIOR:
-			return ">";
-		case sym.MENOR:
-			return "<";
-		case sym.MAIORIGUAL:
-			return ">=";
-		case sym.MENORIGUAL:
-			return "<=";
-		case sym.NAO:
-			return "NÃO";
+		case sym.RSHIFT:
+			return ">>";
+		case sym.LSHIFT:
+			return "<<";
+		case sym.ARSHIFT:
+			return ">>>";
 		default:
 			return null;
 			
@@ -56,7 +50,7 @@ public class Binop extends Exp {
 
 	@Override
 	public void accept(Visitor visitor) {
-		//visitor.visit(this);
+		visitor.visit(this);
 		/*
 		 * Como implemntar?
 		 */
