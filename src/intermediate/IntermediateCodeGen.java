@@ -44,10 +44,10 @@ import arvore.Visitor;
 
 public abstract class IntermediateCodeGen implements Visitor {
 	
-	private Stack<Exp> pilha;
+	private Stack<Stm> pilha;
 	
 	public IntermediateCodeGen() {
-		pilha = new Stack<Exp>();
+		pilha = new Stack<Stm>();
 	}
 	
 	public Stm generate(Inicio p){
@@ -55,7 +55,7 @@ public abstract class IntermediateCodeGen implements Visitor {
 		/*
 		 * Dúvida aqui. 
 		 */
-		return (Stm) pilha.pop();
+		return pilha.pop();
 	}
 
 	@Override
@@ -72,6 +72,11 @@ public abstract class IntermediateCodeGen implements Visitor {
 	public void visit(TipoString n) {
 
 	}
+	
+	@Override
+	public void visit(TipoInt n) {
+
+	}
 
 	@Override
 	public void visit(TipoReal n) {
@@ -83,6 +88,16 @@ public abstract class IntermediateCodeGen implements Visitor {
 
 	}
 
+	@Override
+	public void visit(OpIgualdade n) {
+
+	}
+	
+	@Override
+	public void visit(OpDiferente n) {
+
+	}
+	
 	@Override
 	public void visit(OpMenorIgual n) {
 
@@ -117,14 +132,14 @@ public abstract class IntermediateCodeGen implements Visitor {
 	public void visit(LiteralInteiro n) {
 
 	}
-
+	
 	@Override
-	public void visit(TipoInt n) {
+	public void visit(LiteralVerdadeiro n) {
 
 	}
 
 	@Override
-	public void visit(OpIgualdade n) {
+	public void visit(LiteralFalso n) {
 
 	}
 
@@ -141,29 +156,77 @@ public abstract class IntermediateCodeGen implements Visitor {
 	@Override
 	public void visit(ExpSoma n) {
 		n.simplesExpressao1.accept(this);
-	    Exp e1 = (Exp) pilha.pop();
+	    ExpStm e1 = (ExpStm) pilha.pop();
 	    n.simplesExpressao2.accept(this);
-	    Exp e2 = (Exp) pilha.pop();
-	    pilha.push(new Binop(sym.SOMA, e1, e2));
+	    ExpStm e2 = (ExpStm) pilha.pop();
+	    pilha.push( (ExpStm) new Binop(sym.SOMA, e1, e2));
 	}
 
 	@Override
-	public void visit(OpDiferente n) {
+	public void visit(ExpSubtracao n) {
+		n.simplesExpressao1.accept(this);
+	    ExpStm e1 = (ExpStm) pilha.pop();
+	    n.simplesExpressao2.accept(this);
+	    ExpStm e2 = (ExpStm) pilha.pop();
+	    pilha.push( (ExpStm) new Binop(sym.SUBTRACAO, e1, e2));
+	}
+	
+	@Override
+	public void visit(ExpMultiplicacao n) {
+		n.simplesExpressao1.accept(this);
+	    ExpStm e1 = (ExpStm) pilha.pop();
+	    n.simplesExpressao2.accept(this);
+	    ExpStm e2 = (ExpStm) pilha.pop();
+	    pilha.push( (ExpStm) new Binop(sym.MULTIPLICACAO, e1, e2));
+	}
+	
+	@Override
+	public void visit(ExpDivisao n) {
+		n.simplesExpressao1.accept(this);
+	    ExpStm e1 = (ExpStm) pilha.pop();
+	    n.simplesExpressao2.accept(this);
+	    ExpStm e2 = (ExpStm) pilha.pop();
+	    pilha.push( (ExpStm) new Binop(sym.DIVISAO, e1, e2));
+
+	}
+	
+	@Override
+	public void visit(ExpRelacionais n) {
+
+	}
+
+	@Override
+	public void visit(ExpOu n) {
+
+	}
+
+	@Override
+	public void visit(ExpNao n) {
+
+	}
+
+	@Override
+	public void visit(ExpE n) {
+
+	}
+	
+	@Override
+	public void visit(DeclaracaoEscrita n) {
+
+	}
+	
+	@Override
+	public void visit(DeclaracaoLeitura n) {
+
+	}
+	
+	@Override
+	public void visit(DeclaracaoAtribuicao n) {
 
 	}
 
 	@Override
 	public void visit(DeclaracaoVariaveis n) {
-
-	}
-
-	@Override
-	public void visit(LiteralVerdadeiro n) {
-
-	}
-
-	@Override
-	public void visit(LiteralFalso n) {
 
 	}
 
@@ -181,39 +244,14 @@ public abstract class IntermediateCodeGen implements Visitor {
 	public void visit(ListaDeclaracao n) {
 
 	}
-
+	
 	@Override
-	public void visit(ExpSubtracao n) {
+	public void visit(DeclaracaoIf n) {
 
 	}
-
+	
 	@Override
-	public void visit(ExpRelacionais n) {
-
-	}
-
-	@Override
-	public void visit(ExpOu n) {
-
-	}
-
-	@Override
-	public void visit(ExpNao n) {
-
-	}
-
-	@Override
-	public void visit(ExpMultiplicacao n) {
-
-	}
-
-	@Override
-	public void visit(ExpE n) {
-
-	}
-
-	@Override
-	public void visit(ExpDivisao n) {
+	public void visit(DeclaracaoIfElse n) {
 
 	}
 
@@ -221,30 +259,5 @@ public abstract class IntermediateCodeGen implements Visitor {
 	public void visit(DeclaracaoWhile n) {
 
 	}
-
-	@Override
-	public void visit(DeclaracaoLeitura n) {
-
-	}
-
-	@Override
-	public void visit(DeclaracaoIfElse n) {
-
-	}
-
-	@Override
-	public void visit(DeclaracaoIf n) {
-
-	}
-
-	@Override
-	public void visit(DeclaracaoEscrita n) {
-
-	}
-
-	@Override
-	public void visit(DeclaracaoAtribuicao n) {
-
-	}
-
+	
 }

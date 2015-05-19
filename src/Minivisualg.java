@@ -1,4 +1,5 @@
 import arvore.*; 
+import intermediate.*; 
 import java.io.*;
 
 public class Minivisualg{ 

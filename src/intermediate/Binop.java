@@ -5,9 +5,9 @@ import arvore.Visitor;
 public class Binop extends Exp {
 
 	private int op;
-	private Exp e1, e2;
+	private ExpStm e1, e2;
 
-	public Binop(int op, Exp e1, Exp e2) {
+	public Binop(int op, ExpStm e1, ExpStm e2) {
 		this.op = op;
 		this.e1 = e1;
 		this.e2 = e2;
