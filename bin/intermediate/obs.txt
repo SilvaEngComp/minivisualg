@@ -1,0 +1,2 @@
+Como implementar o print de Exp;
+Como implementar o visit de Binop

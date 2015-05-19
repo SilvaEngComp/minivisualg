@@ -1,0 +1,10 @@
+PROGRAMA FATORIAL;
+  VAR N, FAT, I: INTEIRO;
+INÍCIO
+  LEIA(N); FAT <- 1; I<-1;
+  ENQUANTO I <= N FAÇA INÍCIO
+   FAT <- FAT*I;
+   I<-I+1;
+  FIM;
+  ESCREVA('O FATORIAL DE N', N, ' É ', FAT);
+FIM.

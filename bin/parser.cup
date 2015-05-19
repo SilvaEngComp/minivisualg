@@ -1,0 +1,153 @@
+import arvore.*;
+
+import java_cup.runtime.*;
+
+//Código necessário para informar linha e coluna do erro (se houver)
+
+parser code {: 
+   
+    public void report_error(String message, Object info) { 
+       
+        StringBuffer m = new StringBuffer("Erro"); 
+       
+        if (info instanceof java_cup.runtime.Symbol) { 
+            
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info); 
+           
+            if (s.left >= 0) {                
+               
+                m.append(" na linha "+(s.left));   
+                
+                if (s.right >= 0)                    
+                    
+                       
+                    m.append(", na coluna "+(s.right+1)); 
+            } 
+        } 
+        
+        m.append(" : "+message); 
+        
+        System.err.println(m); 
+    }
+  
+   
+:};
+
+
+
+/* Terminais utilizados */
+
+terminal        SE,OU,NAO,ENTAO,SENAO,ENQUANTO,FACA,INICIO,E,LEIA,ESCREVA,VAR,PROGRAMA,IGUAL;
+terminal		VERDADEIRO,FALSO,BOOLEANO, UMINUS,REAL,CADEIA,INTEIRO,FIM,PONTO;
+terminal		String ID;
+terminal		Double LITERAL_REAL;
+terminal		Integer LITERAL_INTEIRO;
+terminal		String LITERAL_CADEIA;
+terminal        SOMA,SUBTRACAO,MULTIPLICACAO,DIVISAO,DIFERENTE,MENOR,MAIOR,MENORIGUAL,MAIORIGUAL;
+terminal		ATRIBUICAO,DOISPONTOS,PONTOVIRGULA,VIRGULA,PARENTESEESQUERDO,PARENTESEDIREITO;
+
+
+/* Não Terminais */
+
+non terminal	Inicio program_cup;
+non terminal	Block block;
+non terminal	DeclaracaoVariaveis declaracao_variaveis, declaracao_variaveis_total;
+non terminal	Declaracao declaracao, simples_declaracao, declaracao_estruturada, declaracao_atribuicao, declaracao_leitura, declaracao_escrita, composicao_declaracao, declaracao_if, declaracao_while;
+non terminal	ListaVariavel lista_variaveis;
+non terminal	ListaExpressao lista_valor_saida, lista_valor_saida_write;
+non terminal	Tipo tipo;
+non terminal 	ListaDeclaracao lista_declaracao;
+non terminal	SimplesExpressao simples_expressao, constante;
+non terminal	OperadoresRelacionais operadores_relacionais;
+
+
+/* Precedências */
+precedence right SENAO;
+precedence left OU;
+precedence left E;
+precedence left NAO;
+precedence left IGUAL, DIFERENTE , MENOR, MAIOR, MENORIGUAL,MAIORIGUAL;
+precedence left SOMA, SUBTRACAO;
+precedence left MULTIPLICACAO, DIVISAO;
+precedence left UMINUS;
+
+/* Gramática */
+//Inicio da gramática       
+program_cup ::=	PROGRAMA ID:id PONTOVIRGULA block:b {:RESULT= new Inicio(id,b);:}; 
+
+// definição do bloco inicial de instruções finalizados por ponto
+block ::= declaracao_variaveis_total:dvt composicao_declaracao:cd PONTO {:RESULT= new BlockFuncao(dvt,cd);:};
+
+//sessão de variáveis
+declaracao_variaveis_total ::= VAR declaracao_variaveis:dv {:RESULT= dv; :}  | {:RESULT = null;:}; 
+
+declaracao_variaveis ::= lista_variaveis:lv DOISPONTOS tipo:t PONTOVIRGULA {:RESULT = new DeclaracaoVariaveis(lv,t,null);:} |
+ lista_variaveis:lv DOISPONTOS tipo:t PONTOVIRGULA declaracao_variaveis:dv {:RESULT = new DeclaracaoVariaveis(lv,t,dv);:};
+
+//definição na criação de uma ou mais de uma variável (devido a recursão com o não terminal lista_variaveis)
+lista_variaveis ::= ID:id {:RESULT = new ListaVariavel(id,null);:} | lista_variaveis:lv VIRGULA ID:id {:RESULT = new ListaVariavel(id,lv);:};
+
+// Tipos de dados da linguagem
+tipo ::= INTEIRO {:RESULT= TipoInt.getInstancia();:} |REAL {:RESULT= TipoReal.getInstancia();:}|BOOLEANO {:RESULT= TipoBoolean.getInstancia();:}|CADEIA {:RESULT= TipoString.getInstancia();:};
+
+
+//definição do escopo da sessão de comandos
+composicao_declaracao ::= INICIO lista_declaracao:ld FIM {:RESULT = new ComposicaoDeclaracao(ld);:};
+
+//Ápos cada comando/declaração tem-se ponto e virgula, seguido de novos comandos ou não
+lista_declaracao ::=  declaracao:d PONTOVIRGULA lista_declaracao:ld  {:RESULT = new ListaDeclaracao(d,ld);:} | declaracao:d PONTOVIRGULA {:RESULT = new ListaDeclaracao(d,null);:}; 
+
+//Simples declaração (ESCREVA,atribuição,LEIA), Estruturada (if's ou while's)
+declaracao ::= simples_declaracao:sd {:RESULT = sd;:}
+              | declaracao_estruturada:de {:RESULT = de;:};
+
+
+// Não terminais utilizados para atribuição, ESCREVA e LEIA
+simples_declaracao ::= declaracao_atribuicao:da {:RESULT = da;:}| declaracao_leitura:dl {:RESULT = dl;:}| declaracao_escrita:de {:RESULT = de;:};
+4
+
+declaracao_atribuicao ::= ID:id ATRIBUICAO simples_expressao:se {:RESULT = new DeclaracaoAtribuicao(id,se);:};
+
+declaracao_leitura ::= LEIA PARENTESEESQUERDO lista_variaveis:lv PARENTESEDIREITO {:RESULT = new DeclaracaoLeitura(lv);:}| LEIA {:RESULT = new DeclaracaoLeitura(null);:};	
+
+// Não terminal necessário para o caso de escritas compostas ex: LEIA(A,B)
+declaracao_escrita ::= ESCREVA PARENTESEESQUERDO lista_valor_saida:lvs PARENTESEDIREITO {:RESULT = new DeclaracaoEscrita(lvs);:};
+
+lista_valor_saida ::= simples_expressao:se lista_valor_saida_write:lvsw {:RESULT = new ListaExpressao(se,lvsw);:}| simples_expressao:se {:RESULT = new ListaExpressao(se,null);:};
+
+lista_valor_saida_write ::= VIRGULA simples_expressao:se lista_valor_saida_write:lvsw {:RESULT = new ListaExpressao(se,lvsw);:}| VIRGULA simples_expressao:se {:RESULT = new ListaExpressao(se,null);:};
+
+
+
+// Declaracao utilizada nas estruturas SE/ENQUANTO
+declaracao_estruturada ::= composicao_declaracao:cd {:RESULT = cd;:} | declaracao_if:di {:RESULT = di;:} | declaracao_while:dw {:RESULT = dw;:};
+
+//Definição do ENQUANTO
+declaracao_while ::= ENQUANTO simples_expressao:se FACA declaracao:d {:RESULT = new DeclaracaoWhile(se,d);:};
+
+
+//Definição do SE
+declaracao_if ::= SE simples_expressao:se ENTAO declaracao:d {:RESULT = new DeclaracaoIf(se,d);:} | SE simples_expressao:se ENTAO declaracao:d1 SENAO declaracao:d2 {:RESULT = new DeclaracaoIfElse(se,d1,d2);:};
+
+//Combinações de expressões aritméticas
+simples_expressao ::= simples_expressao:s1 SOMA simples_expressao:s2 {:RESULT = new ExpSoma(s1,s2);:} |
+                      simples_expressao:s1 SUBTRACAO simples_expressao:s2 {:RESULT = new ExpSubtracao(s1,s2);:}|
+                      simples_expressao:s1 MULTIPLICACAO simples_expressao:s2 {:RESULT = new ExpMultiplicacao(s1,s2);:}|
+                      simples_expressao:s1 DIVISAO simples_expressao:s2 {:RESULT = new ExpDivisao(s1,s2);:}| 
+                      PARENTESEESQUERDO simples_expressao:s1 PARENTESEDIREITO {:RESULT = s1;:}|
+                      SUBTRACAO simples_expressao:s1  {:RESULT = new ExpSubtracao(new LiteralInteiro(0),s1);:}
+                       %prec UMINUS |
+                      constante:c {:RESULT = c;:}|
+                      simples_expressao:s1 OU simples_expressao:s2  {:RESULT = new ExpOu(s1,s2);:}|
+					  simples_expressao:s1 E simples_expressao:s2 {:RESULT = new ExpE(s1,s2);:}|
+					  NAO simples_expressao:s1 {:RESULT = new ExpNao(s1);:}|
+					  ID:id {:RESULT = new ExpId(id);:}|
+					  simples_expressao:s1 operadores_relacionais:op simples_expressao:s2 {:RESULT = new ExpRelacionais(s1,op,s2);:};
+                      
+operadores_relacionais ::= IGUAL {: RESULT = OpIgualdade.getInstancia();:} | DIFERENTE {: RESULT = OpDiferente.getInstancia();:}| MENOR {: RESULT = OpMenor.getInstancia();:}| MAIOR {: RESULT = OpMaior.getInstancia();:}| MENORIGUAL {: RESULT = OpMenorIgual.getInstancia();:}| MAIORIGUAL {: RESULT = OpMaiorIgual.getInstancia();:};
+
+constante ::=  LITERAL_REAL:l {:RESULT = new LiteralReal(l.doubleValue());:} |
+               VERDADEIRO {:RESULT = LiteralVerdadeiro.getInstancia();:} |
+               FALSO {:RESULT = LiteralFalso.getInstancia();:} |
+               LITERAL_INTEIRO:l {:RESULT = new LiteralInteiro(l.intValue());:}|
+               LITERAL_CADEIA:l {:RESULT = new LiteralString(l);:};
