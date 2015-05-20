@@ -16,9 +16,6 @@ public abstract class IntermediateCodeGen implements Visitor {
 	
 	public Stm generate(Inicio p){
 		visit(p);
-		/*
-		 * Dúvida aqui. 
-		 */
 		return pilhaStm.pop();
 	}
 

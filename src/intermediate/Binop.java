@@ -20,7 +20,7 @@ public class Binop extends Exp {
 		e2.print();
 	}
 	
-	public String symToOp(int op){
+	private String symToOp(int op){
 		switch (op){
 		case sym.SOMA:
 			return "+";
@@ -34,8 +34,6 @@ public class Binop extends Exp {
 			return "e";
 		case sym.OU:
 			return "ou";
-		case sym.XOU:
-			return "=";
 		case sym.NAO:
 			return "NAO";
 		default:

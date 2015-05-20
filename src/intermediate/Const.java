@@ -1,27 +1,24 @@
 package intermediate;
-
-import arvore.Visitor;
+import arvore.*;
 
 public class Const extends Exp {
+	
 	private int i;
+	private float r;
+	private String s;
+	
 	public Const(int i){
 		this.i = i;
 	}
+	public Const(float r){
+		this.r = r;
+	}
+	public Const(String s){
+		this.s = s;
+	}
 	
 	public void print(){
-		/*
-		 * Como implementar?
-		 */
 		System.out.println(i);
 	}
 	
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-		/*
-		 * Como implementar?
-		 */
-
-	}
-
 }
