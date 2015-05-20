@@ -1,14 +1,17 @@
 package intermediate;
+import arvore.*;
 
 import arvore.*;
 import java.util.Stack;
 
 public abstract class IntermediateCodeGen implements Visitor {
 	
-	private Stack<Stm> pilha;
+	private Stack<Exp> pilhaExp;
+	private Stack<Stm> pilhaStm;
 	
 	public IntermediateCodeGen() {
-		pilha = new Stack<Stm>();
+		pilhaExp = new Stack<Exp>();
+		pilhaStm = new Stack<Stm>();
 	}
 	
 	public Stm generate(Inicio p){
@@ -16,7 +19,7 @@ public abstract class IntermediateCodeGen implements Visitor {
 		/*
 		 * Dúvida aqui. 
 		 */
-		return pilha.pop();
+		return pilhaStm.pop();
 	}
 
 	@Override
@@ -117,37 +120,37 @@ public abstract class IntermediateCodeGen implements Visitor {
 	@Override
 	public void visit(ExpSoma n) {
 		n.simplesExpressao1.accept(this);
-	    ExpStm e1 = (ExpStm) pilha.pop();
+	    Exp e1 = (Exp) pilhaExp.pop();
 	    n.simplesExpressao2.accept(this);
-	    ExpStm e2 = (ExpStm) pilha.pop();
-	    pilha.push( (ExpStm) new Binop(sym.SOMA, e1, e2));
+	    Exp e2 = (Exp) pilhaExp.pop();
+	    pilhaExp.push((Exp) new Binop(sym.SOMA, e1, e2));
 	}
 
 	@Override
 	public void visit(ExpSubtracao n) {
 		n.simplesExpressao1.accept(this);
-	    ExpStm e1 = (ExpStm) pilha.pop();
+	    Exp e1 = (Exp) pilhaExp.pop();
 	    n.simplesExpressao2.accept(this);
-	    ExpStm e2 = (ExpStm) pilha.pop();
-	    pilha.push( (ExpStm) new Binop(sym.SUBTRACAO, e1, e2));
+	    Exp e2 = (Exp) pilhaExp.pop();
+	    pilhaExp.push((Exp) new Binop(sym.SUBTRACAO, e1, e2));
 	}
 	
 	@Override
 	public void visit(ExpMultiplicacao n) {
 		n.simplesExpressao1.accept(this);
-	    ExpStm e1 = (ExpStm) pilha.pop();
+	    Exp e1 = (Exp) pilhaExp.pop();
 	    n.simplesExpressao2.accept(this);
-	    ExpStm e2 = (ExpStm) pilha.pop();
-	    pilha.push( (ExpStm) new Binop(sym.MULTIPLICACAO, e1, e2));
+	    Exp e2 = (Exp) pilhaExp.pop();
+	    pilhaExp.push((Exp) new Binop(sym.MULTIPLICACAO, e1, e2));
 	}
 	
 	@Override
 	public void visit(ExpDivisao n) {
 		n.simplesExpressao1.accept(this);
-	    ExpStm e1 = (ExpStm) pilha.pop();
+	    Exp e1 = (Exp) pilhaExp.pop();
 	    n.simplesExpressao2.accept(this);
-	    ExpStm e2 = (ExpStm) pilha.pop();
-	    pilha.push( (ExpStm) new Binop(sym.DIVISAO, e1, e2));
+	    Exp e2 = (Exp) pilhaExp.pop();
+	    pilhaExp.push((Exp) new Binop(sym.DIVISAO, e1, e2));
 
 	}
 	
@@ -218,20 +221,6 @@ public abstract class IntermediateCodeGen implements Visitor {
 
 	@Override
 	public void visit(DeclaracaoWhile n) {
-
-	}
-	/* ==================================================
-	 * 
-	 * (non-Javadoc)
-	 * @see intermediate.Visitor#visit(intermediate.Binop)
-	 */
-	@Override
-	public void visit(Binop binop) {
-
-	}
-	
-	@Override
-	public void visit(Const ct) {
 
 	}
 	

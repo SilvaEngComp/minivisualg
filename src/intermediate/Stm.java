@@ -1,6 +1,7 @@
-package Tree;
-abstract public class Stm {
-	abstract public ExpList kids();
-	abstract public Stm build(ExpList kids);
+package intermediate;
+import arvore.*;
+
+abstract public class Stm{
+	abstract public void print();
 }
 

@@ -1,10 +1,1 @@
-/Lexer.flex
-/Makefile
-/Minivisualg.class
-/TypeCheckerVisitor.class
-/arvore/
 /intermediate/
-/java_cup/
-/java_cup.jar
-/parser.cup
-/teste_compiladores/

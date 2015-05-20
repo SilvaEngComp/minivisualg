@@ -11,9 +11,7 @@ public class sym {
   public static final int E = 4;
   public static final int OU = 5;
   public static final int XOU = 6;
-  public static final int RSHIFT = 7;
-  public static final int LSHIFT= 8;
-  public static final int ARSHIFT = 9;
+  public static final int NAO = 7;
   
 }
 

@@ -1,13 +1,12 @@
 package intermediate;
-
-import arvore.Visitor;
+import arvore.*;;
 
 public class Binop extends Exp {
 
 	private int op;
-	private ExpStm e1, e2;
+	private Exp e1, e2;
 
-	public Binop(int op, ExpStm e1, ExpStm e2) {
+	public Binop(int op, Exp e1, Exp e2) {
 		this.op = op;
 		this.e1 = e1;
 		this.e2 = e2;
@@ -15,6 +14,7 @@ public class Binop extends Exp {
 	}
 	
 	public void print(){
+		
 		e1.print();
 		System.out.println(symToOp(op));
 		e2.print();
@@ -36,24 +36,13 @@ public class Binop extends Exp {
 			return "ou";
 		case sym.XOU:
 			return "=";
-		case sym.RSHIFT:
-			return ">>";
-		case sym.LSHIFT:
-			return "<<";
-		case sym.ARSHIFT:
-			return ">>>";
+		case sym.NAO:
+			return "NAO";
 		default:
 			return null;
 			
 		}
 	}
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-		/*
-		 * Como implemntar?
-		 */
-	}
 
 }

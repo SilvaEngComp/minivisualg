@@ -1,5 +1,8 @@
 package intermediate;
-abstract public class Exp implements Visitavel{
+import arvore.*;
+
+abstract public class Exp{
+	abstract public void print();
 
 }
 
